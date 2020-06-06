@@ -1,0 +1,101 @@
+@font-face { font-family: 'GmarketSansBold'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff'); font-weight: normal; font-style: normal; }
+@font-face { font-family: 'GmarketSansMedium'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff'); font-weight: normal; font-style: normal; }
+@font-face { font-family: 'GmarketSansLight'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); font-weight: normal; font-style: normal; }
+@font-face { font-family: 'RIDIBatang'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff'); font-weight: normal; font-style: normal; }
+
+* {
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  outline: none;
+  overflow: hidden;
+  transition: all 250ms;
+  font-family: 'RIDIBatang', serif;
+  color: #262626;
+}
+
+.x-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.y-center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.x-center[class~="y-center"] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ui {
+  visibility: hidden;
+  opacity: 0;
+}
+
+#thumbnail {
+  font-family: 'GmarketSansMedium';
+}
+
+.text {
+  font-size: 14px;
+}
+
+.health {
+  top: 20px;
+}
+
+.health * {
+  border-radius: 2px; float: left; width: 20px; height: 12px; margin: 1px; background: #ed4956;
+}
+
+.health *:first-child {
+  border-radius: 6px 2px 2px 6px;
+}
+
+.health *:last-child {
+  border-radius: 2px 6px 6px 2px;
+}
+
+.text .line {
+  line-height: 150%;
+  transition: all 800ms;
+  padding: 8px 19px 8px 19px;
+}
+
+.text .line:active {
+  background: #80808028;
+  transition: all 200ms;
+}
+
+.button-list {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.button {
+  padding: 10px;
+  background: black;
+  color: white; 
+  font-size: 14px;
+  text-align: right;
+  margin-top: 4px;
+  margin-left: 4px;
+  background: #262626;
+  width: max-content;
+  float: right;
+  cursor: pointer;
+}
+
+.button::before {
+  content: "# "
+}
+
+/* #262626, #ed4956 #fafafa*/

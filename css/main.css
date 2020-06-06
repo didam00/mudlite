@@ -13,6 +13,7 @@
   transition: all 250ms;
   font-family: 'RIDIBatang', serif;
   color: #262626;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .x-center {

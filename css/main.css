@@ -3,6 +3,12 @@
 @font-face { font-family: 'GmarketSansLight'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff') format('woff'); font-weight: normal; font-style: normal; }
 @font-face { font-family: 'RIDIBatang'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff'); font-weight: normal; font-style: normal; }
 
+html {
+  /* background-image: url(../res/background.png);
+  background-size: 100%; */
+  background: #fafafa;
+}
+
 * {
   -moz-user-select: none;
   user-select: none;
@@ -46,21 +52,44 @@
 
 .text {
   font-size: 14px;
+  overflow: scroll;
+}
+
+.text::-webkit-scrollbar {
+  display: none;
 }
 
 .health {
   top: 20px;
 }
 
-.health * {
-  border-radius: 2px; float: left; width: 20px; height: 12px; margin: 1px; background: #ed4956;
+.energy {
+  top: 44px;
 }
 
-.health *:first-child {
+.health * {
+  border-radius: 2px;
+  float: left;
+  width: 22px; height: 12px;
+  margin: 1px;
+  background: #ed4956;
+  transition: all 1s;
+}
+
+.energy * {
+  border-radius: 2px;
+  float: left;
+  width: 22px; height: 12px;
+  margin: 1px;
+  background: #eaed49;
+  transition: all 1s;
+}
+
+.health *:first-child, .energy *:first-child {
   border-radius: 6px 2px 2px 6px;
 }
 
-.health *:last-child {
+.health *:last-child, .energy *:last-child {
   border-radius: 2px 6px 6px 2px;
 }
 
@@ -79,20 +108,29 @@
   position: absolute;
   bottom: 10px;
   right: 10px;
+  transition: none;
 }
 
 .button {
-  padding: 10px;
-  background: black;
-  color: white; 
+  border: 2px solid #262626;
+  border-radius: 19px;
+  padding: 8px 10px;
+  background: #fafafa;
+  color: #262626; 
   font-size: 14px;
   text-align: right;
   margin-top: 4px;
   margin-left: 4px;
-  background: #262626;
   width: max-content;
   float: right;
   cursor: pointer;
+  font-weight: 900;
+}
+
+.button:hover {
+  background: #262626; 
+  color: #fafafa;
+  padding: 8px 14px;
 }
 
 .button::before {

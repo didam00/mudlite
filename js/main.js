@@ -64,11 +64,10 @@ function swipe(obj, ev) {
   })
 }
 
-var a;
-swipe($("html"), a)
+swipe($("html"))
 
 var inf = {
-  day: [2000, 11, 31, 22, 30],
+  day: [2000, 11, 31, 22, 00],
   situation: "start1",
   logs: [],
 }
@@ -80,9 +79,17 @@ var shortinf = {
 var object = [
   {
     id: "나",
+
     health: 4,
-    weapon: "너클",
-    bag: ["너클", "먹다 남은 콜라", "성냥 개비"]
+    energy: 4,
+    attack: 100,
+    evade: 100,
+    crit: 3,
+    critPer: 0.05,
+    spell: 100,
+
+    weapon: "몽당단검",
+    pendant: "",
   }
 ]
 
@@ -96,9 +103,11 @@ function text(a) {
   nt.innerHTML = a + "<div style='color: gray; font-size: 10px'>"+inf.day[0]+"."+(inf.day[1]+1)+"."+inf.day[2]+". "+pad(inf.day[3],2)+":"+pad(inf.day[4],2)+"</div>";
   $(".text").prepend(nt)
   nt.style.transition = "all 200ms"
-  nt.style.transform = "translateX(2px)"
+  nt.style.transform = "translateX(8px)"
+  nt.style.opacity = "0.5"
   setTimeout(() => {
     nt.style.removeProperty("transform")
+    nt.style.removeProperty("opacity")
     setTimeout(() => {
       nt.style.removeProperty("transition")
     },200)

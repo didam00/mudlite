@@ -10,6 +10,36 @@ function percent(a) {
     if(p <= 0) return a[i]
   }
 }
+let play = {
+  showStat() {
+    $('.text').animate({
+      opacity: 0,
+      top: 74,
+    },50)
+    $('.aboutme').animate({
+      opacity: 1,
+    },50)
+    $('.aboutme').css('visibility','visible')
+    setTimeout(() => {
+      $('.text').css('visibility','hidden')
+    },50)
+    shortinf.screen = "aboutme"
+  },
+  hideStat() {
+    $('.text').animate({
+      opacity: 1,
+      top: 54,
+    },50)
+    $('.aboutme').animate({
+      opacity: 0,
+    },50)
+    $('.text').css('visibility','visible')
+    setTimeout(() => {
+      $('.aboutme').css('visibility','hidden')
+    },50)
+    shortinf.screen = "maingame"
+  }
+}
 function swipe(obj, ev) {
   var startx, starty, endx, endy;
   obj.on('touchstart', event => {
@@ -23,33 +53,12 @@ function swipe(obj, ev) {
       if((starty - endy) > 80) { // up
         // console.log("u")
         if(shortinf.screen == "aboutme") {
-          $('.text').animate({
-            opacity: 1,
-          },50)
-          $('.aboutme').animate({
-            opacity: 0,
-          },50)
-          $('.text').css('visibility','visible')
-          setTimeout(() => {
-            $('.aboutme').css('visibility','hidden')
-          },50)
-          shortinf.screen = "maingame"
+          play.hideStat()
         }
       }
       if((endy - starty) > 80) { // down
-        // console.log("d")
         if(shortinf.screen == "maingame") {
-          $('.text').animate({
-            opacity: 0,
-          },50)
-          $('.aboutme').animate({
-            opacity: 1,
-          },50)
-          $('.aboutme').css('visibility','visible')
-          setTimeout(() => {
-            $('.text').css('visibility','hidden')
-          },50)
-          shortinf.screen = "aboutme"
+          play.showStat()
         }
       }
     }
@@ -81,7 +90,7 @@ var object = [
     id: "나",
 
     health: 4,
-    energy: 4,
+    energy: 100,
     attack: 100,
     evade: 100,
     crit: 3,
@@ -155,23 +164,43 @@ function turn() {
 }
 
 window.onload = function () {
-  $("#thumbnail").click(() => {
-    $("#thumbnail").animate({
-      opacity: "0",
-      wordSpacing: "15px",
-    }, 0);
-    setTimeout(() => {
-      $("#thumbnail").remove();
-      $(".maingame").animate({
-        opacity: "1",
-        visibility: "visible"
-      })
-      this.setTimeout(() => {
-        $(".maingame").css("visibility","visible");
-      },200)
-      shortinf.screen = "maingame"
-    }, 200);
+  $("html").click(() => {
+    if(shortinf.screen == "thumbnail") {
+      $("#thumbnail").animate({
+        opacity: "0",
+        wordSpacing: "15px",
+      }, 0);
+      setTimeout(() => {
+        $("#thumbnail").remove();
+        $(".maingame").animate({
+          opacity: "1",
+          visibility: "visible"
+        })
+        this.setTimeout(() => {
+          $(".maingame").css("visibility","visible");
+        },200)
+        shortinf.screen = "maingame"
+      }, 200);
+    }
   })
 
   turn()
+
+  tick = setInterval(() => {
+    $(".statWindow td")[1].innerHTML = me.attack // 근력
+    $(".statWindow td")[3].innerHTML = me.health // 근력
+    $(".statWindow td")[5].innerHTML = me.energy // 기력
+    $(".statWindow td")[7].innerHTML = me.evade // 회피력
+    $(".statWindow td")[9].innerHTML = me.crit+"배" // 치명력
+    $(".statWindow td")[11].innerHTML = (Math.floor(me.critPer*1000)/10) + "%" // 집중력
+    $(".statWindow td")[13].innerHTML = me.spell // 지력
+  },1000/60)
+
+  $("#showButton").on('click', () => {
+    if(shortinf.screen == "aboutme") {
+      play.hideStat()
+    } else if(shortinf.screen == "maingame") {
+      play.showStat()
+    }
+  })
 }

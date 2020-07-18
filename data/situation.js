@@ -7,7 +7,7 @@ data.situation = [
     ],
     effect: [
       () => {me.health += 1},
-      () => {me.energy += 1},
+      () => {me.energy += 25},
       () => {me.attack += 80},
       () => {me.evade += 10},
       () => {me.crit += 2},
@@ -26,7 +26,7 @@ data.situation = [
     ],
     effect: [
       () => {me.health -= 1;},
-      () => {me.energy -= 1;},
+      () => {me.energy -= 25;},
       () => {me.attack -= 20; me.crit -= 0.5;},
       () => {me.spell -= 20; me.critPer -= 0.05; me.evade -= 3},
       () => {me.evade -= 7;},

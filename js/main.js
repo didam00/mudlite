@@ -278,4 +278,13 @@ window.onload = function () {
       play.showStat()
     }
   })
+
+  // mobile
+  $("#showButton").on('touch', () => {
+    if(shortinf.screen == "aboutme") {
+      play.hideStat()
+    } else if(shortinf.screen == "maingame") {
+      play.showStat()
+    }
+  })
 }

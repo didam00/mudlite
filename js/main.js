@@ -4,6 +4,13 @@ function find(where, id)  {
 function findslice(arr, a) {
   return arr.splice(arr.indexOf(a),1);
 }
+function erase(str, a, all=false) {
+  if(all) {
+    return str.replace(RegExp(a,"gi"),"")
+  } else {
+    return str.replace(a, "")
+  }
+}
 function random(a, times=1, allowoverlap=true) {
   var randomValue = new Array;
   var aa = deepCopy(a);
@@ -16,7 +23,7 @@ function random(a, times=1, allowoverlap=true) {
     }
   }
 
-  return randomValue;
+  return (times == 1) ? randomValue[0] : randomValue;
 }
 function pad(n, width) {
    n = n + ''; return n.length >= width ? n : new Array(width - n.length + 1).join('0') + n;
@@ -30,10 +37,27 @@ function percent(a) {
     if(p <= 0) return a[i]
   }
 }
-function deepCopy(a) {
-  return JSON.parse(JSON.stringify(a))
+function getType(obj){
+  return Object.prototype.toString.call(obj).slice(8,-1).toLowerCase();
 }
-
+function deepCopy(a) {
+  switch(getType(a)) {
+    case "array" : return [...a];
+    case "object" : return {...a};
+  }
+}
+function setStat(a, value) {
+  me[a] += value
+}
+var get = function (give_obj) {
+  text(random(['#name은(는) '+give_obj+'을(를) 얻었다!','#name은(는) '+give_obj+'을(를) 획득했다!','#name은(는) '+give_obj+'을(를) 가졌다!','#name은(는) '+give_obj+'을(를) 주웠다!','#name은(는) '+give_obj+'을(를) 가방에 넣었다!']))
+  if(me.item.length >= me.maxItem) {
+    text(random(['하지만, #name의 가방은 너무 무거워보인다.', '하지만, #name의 힘에는 한계가 있었다.', '하지만, #name의 가방이 이미 닫히지 않는 상태까지 와버렸다.', '하지만, 이것까지 담으면 #name의 가방은 찢어질 것이다.']))
+  } else {
+    me.item.push(give_obj)
+    me.item.sort()
+  }
+}
 let play = {
   showStat() {
     $('.text').animate({
@@ -97,10 +121,17 @@ function swipe(obj, ev) {
   })
 }
 
+var system = new Object;
+
+var discard = function (a) {
+  findslice(me.item, a)
+}
+
+
 swipe($("html"))
 
 var inf = {
-  day: [2000, 11, 31, 21, 30],
+  day: [2001, 0, 1, 3, 30],
   situation: "start1",
   logs: [],
 }
@@ -122,14 +153,23 @@ var object = [
     crit: 3,
     critPer: 0.05,
     spell: 100,
-    lucky: 100,
-    angel: 50,
-    evil: 50,
+    lucky: 50,
+    hope: 0,
+    angel: 100,
+    evil: 100,
+    effort: 0,
+    observe: 50,
 
     weapon: "몽당단검",
     pendant: "",
+    item: new Array,
+    maxItem: 18,
   }
 ]
+
+var enemy = {
+  
+}
 
 let me = object[0]
 
@@ -137,7 +177,7 @@ var day = new Date(inf.day[0], inf.day[1], inf.day[2], inf.day[3], inf.day[4])
 
 function text(a) {
   a = a.replace(/#name/gi,me.name)
-  console.log(a)
+  a = a.replace(/#enemy/gi,enemy.id)
   var nt = document.createElement("div");
   nt.className = "line";
   nt.innerHTML = a + "<div style='color: gray; font-size: 10px'>"+inf.day[0]+"."+(inf.day[1]+1)+"."+inf.day[2]+". "+pad(inf.day[3],2)+":"+pad(inf.day[4],2)+"</div>";
@@ -174,13 +214,28 @@ function select(a) {
     }, 100)
     inf.logs.push("#"+inf.day[0]+"#"+inf.day[1]+"#"+inf.day[2]+"#"+inf.day[3]+"#"+inf.day[4]+"#"+inf.situation+"#"+ans+";")
     
-    let ansEff = find(data.situation, inf.situation).effect[ans]
-    // console.log(ansEff)
+    var ansEffArray = find(data.situation, inf.situation).effect;
+    
+    switch(typeof ansEffArray) {
+      case 'string' : 
+      if(ansEffArray.indexOf("@") == 0) {
+        var ansEff = find(data.situation, ansEffArray.replace("@","")).effect[ans]
+      }
+        ;break;
+      default :
+      var ansEff = ansEffArray[ans]
+        ;break;
+    }
+
     switch(typeof ansEff) {
       case 'string' : 
-        data.situFunction[ansEff]()
+        if(ansEff.indexOf("#") == 0) {                  // &effect
+          data.situFunction[ansEff.replace("#","")]();
+        } else {                                        // effect
+          inf.situation = ansEff;
+        }
         ;break;
-      case 'function' :
+      case 'function' :                                 // effect()
         ansEff()
         ;break;
     }
@@ -196,7 +251,13 @@ function turn() {
   inf.day = [day.getFullYear(), day.getMonth(), day.getDate(), day.getHours(), day.getMinutes()]
   var answerText = find(data.situation, inf.situation)
   if(!answerText.answer[0]) {
-    answerText.answer = Object.keys(answerText.effect)
+    if(typeof answerText.effect == 'string') {
+      if(answerText.effect.indexOf("@") == 0) {
+        answerText.answer = Object.keys(find(data.situation, erase(answerText.effect, "@")).effect)
+      }
+    } else {
+      answerText.answer = Object.keys(answerText.effect)
+    }
   }
   this.answerSet(answerText.answer)
   for(let i = 0; i < answerText.text.length; i++) {
@@ -260,15 +321,31 @@ window.onload = function () {
     me.angel = Math.floor(me.angel*100)/100
     me.evil = Math.floor(me.evil*100)/100
     me.lucky = Math.floor(me.lucky*100)/100
+    me.hope = Math.floor(me.hope*100)/100
+    me.observe = Math.floor(me.observe*100)/100
     
-    $(".statWindow td")[1].innerHTML = me.name // 이름
-    $(".statWindow td")[3].innerHTML = me.attack // 근력
-    $(".statWindow td")[5].innerHTML = me.health + " / " + me.maxhealth // 체력
-    $(".statWindow td")[7].innerHTML = me.energy + " / " + me.maxenergy // 기력
-    $(".statWindow td")[9].innerHTML = me.crit+"배" // 치명력
-    $(".statWindow td")[11].innerHTML = (Math.floor(me.critPer*1000)/10) + "%" // 집중력
-    $(".statWindow td")[13].innerHTML = me.spell // 지력
-    $(".statWindow td")[15].innerHTML = me.evade // 회피력
+    $(".statWindow .value, .statWindow .stat")[0].innerHTML = me.name // 이름
+    $(".statWindow .value, .statWindow .stat")[1].innerHTML = me.attack // 근력
+    $(".statWindow .value, .statWindow .stat")[2].innerHTML = me.health + " / " + me.maxhealth // 체력
+    $(".statWindow .value, .statWindow .stat")[3].innerHTML = me.energy + " / " + me.maxenergy // 기력
+    $(".statWindow .value, .statWindow .stat")[4].innerHTML = me.crit+"배" // 치명력
+    $(".statWindow .value, .statWindow .stat")[5].innerHTML = (Math.floor(me.critPer*1000)/10) + "%" // 집중력
+    $(".statWindow .value, .statWindow .stat")[6].innerHTML = me.spell // 지력
+    $(".statWindow .value, .statWindow .stat")[7].innerHTML = me.evade // 회피력
+    $(".statWindow .value, .statWindow .stat")[8].innerHTML = me.effort // 노력
+    $(".statWindow .value, .statWindow .stat")[9].innerHTML = me.hope // 행복
+    $(".statWindow .value, .statWindow .stat")[10].innerHTML = me.angel // 선
+    $(".statWindow .value, .statWindow .stat")[11].innerHTML = me.evil // 악
+    $(".statWindow .value, .statWindow .stat")[12].innerHTML = me.lucky // 행운
+    $(".statWindow .value, .statWindow .stat")[13].innerHTML = me.observe // 관찰력
+
+    $(".statWindow .item")[0].innerHTML = me.item.join("  /  ")
+
+    if(me.health <= 0) {
+      me.health = 1;
+      data.screenEffect.invertShake();
+      $(".dead-screen").css("visibility",'visible')
+    }
   },1000/60)
 
   $("#showButton").on('click', () => {
@@ -280,7 +357,7 @@ window.onload = function () {
   })
 
   // mobile
-  $("#showButton").on('touch', () => {
+  $("#showButton").on('touchstart', () => {
     if(shortinf.screen == "aboutme") {
       play.hideStat()
     } else if(shortinf.screen == "maingame") {

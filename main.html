@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" style='transition: all 20ms; height: 100%;'>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +8,13 @@
   <script>var data = new Object;</script>
   <script src="js/main.js"></script>
   <script src="data/situation.js"></script>
-  <script src="data/item.js"></script>
+  <script src="data/item.js"></script> 
+  <script src="data/screenEffect.js"></script>
+  <script src="data/entity.js"></script> 
   <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+  <div class="dead-screen"><div>당신은 사망했습니다.</div></div>
   <div id="showButton">▼</div>
   <div id="thumbnail" class="x-center y-center" style="font-size: 10px; word-spacing: 10px; cursor: pointer;">M U D L I T E</div>
   <div class="ui maingame">
@@ -37,31 +40,41 @@
     <table class="statWindow">
       <tbody>
         <tr>
-          <td class="subj">이름</td><td class='value'>아담</td>
-          <td class="subj">근력</td><td class='value'>100</td>
+          <td class='title'>능력</td>
         </tr>
         <tr>
-          <td class="subj">체력</td><td class='value'>4</td>
-          <td class="subj">기력</td><td class='value'>100</td>
+          <td class="subj">이름</td><td class='value stat'></td>
+          <td class="subj">근력</td><td class='value'></td>
         </tr>
         <tr>
-          <td class="subj">치명력</td><td class='value'>3배</td>
-          <td class="subj">집중력</td><td class='value'>5%</td>
+          <td class="subj">체력</td><td class='value stat'></td>
+          <td class="subj">기력</td><td class='value stat'></td>
         </tr>
         <tr>
-          <td class="subj">지력</td><td class='value'>100</td>
-          <td class="subj">회피력</td><td class='value'>100</td>
+          <td class="subj">치명력</td><td class='value stat'></td>
+          <td class="subj">집중력</td><td class='value stat'></td>
         </tr>
         <tr>
-          <td class="subj">노력</td><td class='value'>0</td>
-          <td class="subj">행복</td><td class='value'>0</td>
+          <td class="subj">지력</td><td class='value stat'></td>
+          <td class="subj">회피력</td><td class='value stat'></td>
         </tr>
         <tr>
-          <td class="subj">선</td><td class='value'>0</td>
-          <td class="subj">악</td><td class='value'>0</td>
+          <td class="subj">노력</td><td class='value stat'></td>
+          <td class="subj">희망</td><td class='value stat'></td>
         </tr>
         <tr>
-          <td class="subj">행운</td><td class='value'>100</td>
+          <td class="subj">선</td><td class='value stat'></td>
+          <td class="subj">악</td><td class='value stat'></td>
+        </tr>
+        <tr>
+          <td class="subj">행운</td><td class='value stat'></td>
+          <td class="subj">관찰력</td><td class='value stat'></td>
+        </tr>
+        <tr>
+          <td class="title">아이템</td>
+        </tr>
+        <tr>
+          <td class="item" colspan="4"></td>
         </tr>
       </tbody>
     </table>

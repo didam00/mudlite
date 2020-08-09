@@ -123,6 +123,10 @@ function swipe(obj, ev) {
 
 var system = new Object;
 
+system.versionCheck = () => {
+  console.log("version 20200809")
+}
+
 var discard = function (a) {
   findslice(me.item, a)
 }
@@ -357,11 +361,11 @@ window.onload = function () {
   })
 
   // mobile
-  $("#showButton").on('touchstart', () => {
+  document.getElementById("showButton").ontouchstart = function () {
     if(shortinf.screen == "aboutme") {
       play.hideStat()
     } else if(shortinf.screen == "maingame") {
       play.showStat()
     }
-  })
+  }
 }

@@ -1,14 +1,14 @@
 data.situFunction = {
   random() {
-    inf.situation = 'random'+Math.floor(Math.random()*3)
+    inf.situation = 'random'+Math.floor(Math.random()*4)
   },
   find_something() {
-    setStat('energy', -5)
-    inf.situation = 'find_something'+Math.floor(Math.random()*2)
+    setStat('energy', -4)
+    inf.situation = 'find_something'+Math.floor(Math.random()*9)
   },
   find_who() {
-    setStat('energy', -5)
-    inf.situation = 'find_who'+Math.floor(Math.random()*2)
+    setStat('energy', -4)
+    inf.situation = 'find_who'+Math.floor(Math.random()*3)
   },
 }
 
@@ -36,11 +36,11 @@ data.situation = [
 
     },
     effect: {
-      호전적임()      {me.attack += 150; me.crit += 0.5; me.critPer += 0.01;},
-      인내심이_강함() {me.health += 1; me.maxhealth += 1; me.maxenergy += 5; me.energy += 5;},
-      긍정적임()      {me.angel += 10; me.maxenergy += 30; me.energy += 30; me.lucky += 20;},
-      부정적임()      {me.evil += 10; me.maxenergy -= 30; me.energy += 30; me.lucky -= 20; me.spell += 50; me.attack += 50;},
-      맹신적임()      {me.critPer += 0.03; me.crit += 0.5; me.lucky += 20;}
+      호전적임()      {me.attack.base += 40; me.crit.base += 0.5; me.critPer.base += 0.01;},
+      인내심이_강함() {me.health += 1; me.maxhealth.base += 1; me.maxenergy.base += 5; me.energy += 5;},
+      긍정적임()      {me.angel.base += 10; me.maxenergy.base += 30; me.energy += 30; me.lucky.base += 20;},
+      부정적임()      {me.evil.base += 10; me.maxenergy.base -= 30; me.energy += 30; me.lucky.base -= 20; me.spell.base += 50; me.attack.base += 50;},
+      맹신적임()      {me.critPer.base += 0.03; me.crit.base += 0.5; me.lucky.base += 20;}
     },
     publicEffect: () => {
       inf.situation = "start2"
@@ -56,12 +56,12 @@ data.situation = [
       
     },
     effect: {
-      다리중상() {me.evade *= 0.85; me.maxenergy *= 0.8; me.energy *= 0.8;},
-      어깨중상() {me.attack *= 0.8; me.crit *= 0.7; me.critPer *= 0.5;},
-      머리중상() {me.spell *= 0.7; me.energy *= 0.7; me.maxenergy *= 0.7;},
-      복부중상() {me.health -= 1; me.maxhealth -= 1; me.energy *= 0.9; me.maxenergy *= 0.9;  me.energy *= 0.9;},
-      눈중상()   {me.evade *= 0.85; me.critPer -= 0.08; me.observe *= 0.9},
-      전체경상() {me.maxenergy *= 0.92; me.energy *= 0.92; me.crit *= 0.9; me.critPer -= 0.02; me.evade *= 0.92; me.spell *= 0.92;}
+      다리중상() {me.evade.base *= 0.85; me.maxenergy.base *= 0.8; me.energy *= 0.8;},
+      어깨중상() {me.attack.base *= 0.8; me.crit.base *= 0.7; me.critPer.base *= 0.5;},
+      머리중상() {me.spell.base *= 0.7; me.energy *= 0.7; me.maxenergy.base *= 0.7;},
+      복부중상() {me.health.base -= 1; me.maxhealth.base -= 1; me.energy *= 0.9; me.maxenergy.base *= 0.9;  me.energy.base *= 0.9;},
+      눈중상()   {me.evade.base *= 0.85; me.critPer.base -= 0.08; me.observe.base *= 0.9},
+      전체경상() {me.maxenergy.base *= 0.92; me.energy *= 0.92; me.crit.base *= 0.9; me.critPer.base -= 0.02; me.evade.base *= 0.92; me.spell.base *= 0.92;}
     },
     publicEffect: () => {
       inf.situation = "start3"
@@ -77,14 +77,14 @@ data.situation = [
       find(data.situation, 'start3').answer = random(find(data.situation, 'start3').answer, 3, false);
     },
     effect: {
-      아담() {me.name = '아담'; get('붉은 열매 심지'); me.angel -= 90; me.evil -= 90},
-      릴리스() {me.name = '릴리스'; me.energy += 1; me.maxenergy += 1; me.angel = 0;},
-      이브() {me.name = '이브'; get('붉은 열매 심지'); me.angel -= 90; me.evil -= 89},
-      카인() {me.name = '카인'; get('창'); me.evil += 1; me.attack += 1; me.evil += 1},
-      아벨() {me.name = '아벨'; get('양고기'); me.effort += 1;},
+      아담() {me.name = '아담'; get('붉은 열매 심지'); me.angel.base -= 90; me.evil.base -= 90},
+      릴리스() {me.name = '릴리스'; me.energy += 1; me.maxenergy.base += 1; me.angel.base = 0;},
+      이브() {me.name = '이브'; get('붉은 열매 심지'); me.angel.base -= 90; me.evil.base -= 89},
+      카인() {me.name = '카인'; get('창'); me.evil.base += 1; me.attack.base += 1; me.evil.base += 1},
+      아벨() {me.name = '아벨'; get('양고기'); me.effort.base += 1;},
       셋() {me.name = '셋'},
-      에녹() {me.name = '에녹'; me.lucky += 1},
-      므두셀라() {me.name = '므두셀라'; me.maxenergy += 1; me.maxhealth += 1},
+      에녹() {me.name = '에녹'; me.lucky.base += 1},
+      므두셀라() {me.name = '므두셀라'; me.maxenergy.base += 1; me.maxhealth.base += 1},
       노아() {me.name = '노아'; get('종이배');},
     },
     publicEffect: () => {
@@ -117,8 +117,8 @@ data.situation = [
       
     },
     effect: {
-      휴식: "first-rest",
       이동준비: "first-move",
+      휴식: "first-rest",
     },
     publicEffect: () => {
       
@@ -131,17 +131,17 @@ data.situation = [
 
     ],
     event: () => {
-      if(me.energy < me.maxenergy*0.9) {
-        me.energy += (me.maxenergy-me.energy)*0.05 + 2
+      if(me.energy < me.maxenergy.total*0.9) {
+        me.energy += (me.maxenergy.total-me.energy)*0.05 + 2
       }
-      if(me.energy >= me.maxenergy*0.9) {
-        me.energy = me.maxenergy*0.9
+      if(me.energy >= me.maxenergy.total*0.9) {
+        me.energy = me.maxenergy.total*0.9
         text("#name에게 더 이상 휴식은 의미 없어보인다.");
       }
     },
     effect: {
-      드르렁: "rest",
       기상: '#random',
+      드르렁: "rest",
     },
     publicEffect: () => {
       
@@ -154,7 +154,7 @@ data.situation = [
 
     ],
     event: () => {
-      setStat('energy', -5)
+      setStat('energy', -3)
       setStat('effort', 5)
     },
     effect: {
@@ -172,7 +172,7 @@ data.situation = [
 
     ],
     event: () => {
-      setStat('energy', -5)
+      setStat('energy', -3)
       setStat('effort', 1)
     },
     effect: {
@@ -193,8 +193,8 @@ data.situation = [
 
     },
     effect: {
+      이동준비: "move",
       수면: "rest",
-      이동: "move",
     },
     publicEffect: () => {
       
@@ -233,23 +233,41 @@ data.situation = [
     }
   },
   {
+    id: "random3",
+    text: ["#name은(는) 우연히 운동기구를 발견하였다. 에너지가 좀 소비되겠지만 회피력이 어느 정도 증가할 것이다! 어떻게 할까?"],
+    answer: [
+
+    ],
+    event: () => {
+      
+    },
+    effect: {
+      한다() {text('회피력이 증가한 기분이 든다!'); setStat('evade', 8, 'health'); setStat('energy', -8)},
+      안한다() {},
+    }
+    ,
+    publicEffect: () => {
+      inf.situation = 'random0'
+    }
+  },
+  {
     id: "rest",
     text: ["#name은(는) 편하게 휴식을 취한다."],
     answer: [
 
     ],
     event: () => {
-      if(me.energy < me.maxenergy*0.9) {
-        me.energy += (me.maxenergy-me.energy)*0.05 + 2
+      if(me.energy < me.maxenergy.total*0.9) {
+        me.energy += (me.maxenergy.total-me.energy)*0.05 + 2
       }
-      if(me.energy >= me.maxenergy*0.9) {
-        me.energy = me.maxenergy*0.9
+      if(me.energy >= me.maxenergy.total*0.9) {
+        me.energy = me.maxenergy.total*0.9
         text("#name에게 더 이상 휴식은 의미 없어보인다.");
       }
     },
     effect: {
-      드르렁() {},
       기상: '#random',
+      드르렁() {},
     },
     publicEffect: () => {
       
@@ -300,12 +318,33 @@ data.situation = [
       
     ],
     event: () => {
-      setStat("attack", 20)
-      setStat("critPer", 0.08)
+      setStat("attack", 8, 'bySpearknight')
+      setStat("critPer", 0.03, 'bySpearknight')
     },
     effect: {
       덤벼라: () => {
         enemy = deepCopy(find(data.entity, "무기를 든 창기사"))
+        inf.situation = 'fight'
+      }
+      ,
+      도망치자: 'escape'
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_who2",
+    text: ["#name은(는) 어떤 징그럽게 팔만 덩그러니 있는 초록색을 보았다. 사람 팔이다 저건,",'그리고 살아있다.'],
+    answer: [
+      
+    ],
+    event: () => {
+
+    },
+    effect: {
+      덤벼라: () => {
+        enemy = deepCopy(find(data.entity, "움직이는 녹색 팔"))
         inf.situation = 'fight'
       }
       ,
@@ -340,20 +379,35 @@ data.situation = [
     id: "attack",
     text: [],
     answer: [
-      "공격"
+      "공격", "도망",
     ],
     event: () => {
-      text(enemy.id+"을(를) 공격했다!")
-      enemy.health -= me.attack
+      setStat('energy',-4)
+      var damageCounter = 0;
+      if(me.critPer.total >= Math.random()) {
+        text("#name은(는)"+enemy.id+"을(를) 강력하게 공격했다!")
+        data.screenEffect.smallVerticalShake()
+        damageCounter = (me.attack.total * me.crit.total)
+      } else {
+        text("#name은(는) "+enemy.id+"을(를) 공격했다.")
+        damageCounter = (me.attack.total)
+        data.screenEffect.bitVerticalShake()
+      }
+      // 적 방어력에 따라 피해 감소
+      damageCounter *= 1 - enemy.def;
+      damageCounter = Math.ceil(damageCounter);
+      enemy.health -= damageCounter;
+
+      text("("+damageCounter+"만큼의 피해를 주었습니다.)")
       if(enemy.health <= 0) {
         inf.situation = "win"
-        for(let i=0; i<Math.ceil(Math.random()*Math.ceil(me.lucky/60)); i++) {
+        for(let i=0; i<Math.ceil(Math.random()*Math.ceil(me.lucky.total/60)); i++) {
           get(random(enemy.item))
         }
       } else {
         let enemySkill = random(enemy.pattern)
         text(enemySkill.text)
-        if(me.evade + enemySkill.evade <= 0) {
+        if(me.evade.total + enemySkill.evade <= 0) {
           enemySkill.event()
           text(enemySkill.success)
         } else {
@@ -363,6 +417,7 @@ data.situation = [
     },
     effect: {
       공격: 'attack',
+      도망: 'escape',
     },
     publicEffect: () => {
       
@@ -417,6 +472,192 @@ data.situation = [
         discard("밴드")
         inf.situation = '#random';
       },
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something2", // 에너지 드링크 발견
+    text: ["#name은(는) 누군가버린 에너지 드링크를 얻었다! 이걸 지금 마실까?"],
+    answer: [
+      
+    ],
+    event: () => {
+      
+    },
+    effect: {
+      마시자: "find_something2_drink",
+      챙기자: "find_something2_get"
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something2_get",
+    text: ["#name은(는) 주변을 슥 확인하더니 주머니에 주섬주섬 넣는다. 나중에 에너지가 꼭 필요할 때 마셔야겠다."],
+    answer: [
+      
+    ],
+    event: () => {
+      get('에너지 드링크')
+    },
+    effect: {
+      다음: "#random",
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something2_drink",
+    text: ["#name은(는) 주변을 슥 확인하더니 에너지 드링크를 벌컥벌컥 마셨다."],
+    answer: [
+      
+    ],
+    event: () => {
+      if((me.maxenergy.total - me.energy) <= 25) {
+        text("내가 보기엔 에너지 드링크를 모아두는게 나았을 것같은데 왜 필요하지도 않은데 마신걸까? 희망적으로 보이긴 한다.")
+        setStat('hope',4)
+      }
+      setStat('energy', 50)
+    },
+    effect: {
+      다음: "#random",
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something3", // 쉬운 책 발견
+    text: ["#name은(는) 많은 정보를 얻을 수 있는 나름 기초적인 마법 책을 발견하였다! 지식을 꽤 얻은 것 같다."],
+    answer: [
+      
+    ],
+    event: () => {
+      setStat('spell',5,'book')
+    },
+    effect: {
+      다음: "#random",
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something4", // 쉬운 책 발견 2
+    text: ["#name은(는) 마법 용어들이 꽤 정리되어 있는 책을 발견하였다! 지식을 꽤애 얻은 것 같다."],
+    answer: [
+      
+    ],
+    event: () => {
+      setStat('spell',10,'book')
+    },
+    effect: {
+      다음: "#random",
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something5", // 회복서 발견
+    text: ["#name은(는) 무슨 종이가 떨어져 있는 것을 보았다."],
+    answer: [
+      
+    ],
+    event: () => {
+      if(me.spell.total >= 120) {
+        find(data.situation, 'find_something5').answer = ['아하']
+      } else {
+        find(data.situation, 'find_something5').answer = ['뭐시여']
+      }
+    },
+    effect: {
+      아하: "find_something5_ahha",
+      뭐시여: "find_something5_eng",
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something5_eng",
+    text: ["#name은(는) 그 종이가 무엇인지 알아채지 못한듯 싶다."],
+    answer: [
+      '다음'
+    ],
+    event: () => {
+      
+    },
+    effect: {
+      다음: "#random"
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something5_ahha",
+    text: ["#name은(는) 고민하다 그 종이가 회복서임을 어디서 봤었음을 기억해냈다! 그 종이를 불태우며 #name의 체력을 스스로 1 회복했다!"],
+    answer: [
+      '다음'
+    ],
+    event: () => {
+      setStat('health',1)
+    },
+    effect: {
+      다음: "#random"
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something6",
+    text: ["#name은(는) 운동기구를 발견하고는 운동을 하였다. 회피력이 증가한 느낌이다."],
+    answer: [
+      '다음'
+    ],
+    event: () => {
+      setStat('evade', 4, 'health')
+    },
+    effect: {
+      다음: "#random"
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something7",
+    text: ["#name은(는) 운동기구를 발견하고는 운동을 하였다. 공격력이 증가한 느낌이다."],
+    answer: [
+      '다음'
+    ],
+    event: () => {
+      setStat('attack', 4, 'health')
+    },
+    effect: {
+      다음: "#random"
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_something8",
+    text: ["#name은(는) 운동기구를 발견하고는 운동을 하였다. 최대기력이 증가한 느낌이다."],
+    answer: [
+      '다음'
+    ],
+    event: () => {
+      setStat('maxenergy', 8, 'health')
+    },
+    effect: {
+      다음: "#random"
     },
     publicEffect: () => {
       

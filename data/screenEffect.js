@@ -16,6 +16,70 @@ data.screenEffect = {
       $('html').css('transform','')
     },200)
   },
+  smallVerticalShake() {
+    $('html').css('transform','translateY(-4%)')
+    setTimeout(function () {
+      $('html').css('transform','translateY(3%)')
+    },50)
+    setTimeout(function () {
+      $('html').css('transform','translateY(-2%)')
+    },100)
+    setTimeout(function () {
+      $('html').css('transform','translateY(1%)')
+    },150)
+    setTimeout(function () {
+      $('html').css('filter','')
+      $('html').css('transform','')
+    },200)
+  },
+  smallHorizonalShake() {
+    $('html').css('transform','translateX(-4%)')
+    setTimeout(function () {
+      $('html').css('transform','translateX(3%)')
+    },50)
+    setTimeout(function () {
+      $('html').css('transform','translateX(-2%)')
+    },100)
+    setTimeout(function () {
+      $('html').css('transform','translateX(1%)')
+    },150)
+    setTimeout(function () {
+      $('html').css('filter','')
+      $('html').css('transform','')
+    },200)
+  },
+  bitVerticalShake() {
+    $('html').css('transform','translateY(-1%)')
+    setTimeout(function () {
+      $('html').css('transform','translateY(0.75%)')
+    },50)
+    setTimeout(function () {
+      $('html').css('transform','translateY(-0.5%)')
+    },100)
+    setTimeout(function () {
+      $('html').css('transform','translateY(0.25%)')
+    },150)
+    setTimeout(function () {
+      $('html').css('filter','')
+      $('html').css('transform','')
+    },200)
+  },
+  bitHorizonalShake() {
+    $('html').css('transform','translateX(-1%)')
+    setTimeout(function () {
+      $('html').css('transform','translateX(0.75%)')
+    },50)
+    setTimeout(function () {
+      $('html').css('transform','translateX(-0.5%)')
+    },100)
+    setTimeout(function () {
+      $('html').css('transform','translateX(0.25%)')
+    },150)
+    setTimeout(function () {
+      $('html').css('filter','')
+      $('html').css('transform','')
+    },200)
+  },
   blur() {
     $('html').css('transition','all 1000ms')
     $('html').css('filter','blur(8px)')

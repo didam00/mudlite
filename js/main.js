@@ -46,8 +46,51 @@ function deepCopy(a) {
     case "object" : return {...a};
   }
 }
-function setStat(a, value) {
-  me[a] += value
+function addbuff(a) {
+  me.buff.push(a)
+  find(data.buff,a).starting();
+}
+function deletebuff(a) {
+  if(me.buff.indexOf(a) != -1) {
+    me.buff.splice(me.buff.indexOf(a),1)
+    find(data.buff,a).ending();
+    return true;
+  } else {
+    return false;
+  }
+}
+function setStat(a, value, type='base') {
+  if(a == 'health' || a == 'energy') {
+    if(getType(value) == 'string') {
+      switch (value.slice(-1)) {
+        case '%':
+          value = me[a] * Number(value.slice(0,-1)) * 0.01
+          break;
+        case '!': // 절대적값
+          me[a] = Number(value.slice(0,-1))
+          value = 0;
+          break;
+        default: break;
+      }
+    }
+    me[a] += Number(value)
+  } else {
+    if(!me[a][type]) {
+      me[a][type] = 0
+    }
+    if(getType(value) == 'string') {
+      switch (value.slice(-1)) {
+        case '%':
+          value = (me[a].total - me[a][type]) * Number(value.slice(0,-1)) * 0.01
+          break;
+        case '!':
+          me[a][type] = Number(value.slice(0,-1))
+          value = 0;
+        default: break;
+      }
+    }
+    me[a][type] += Number(value)
+  }
 }
 var get = function (give_obj) {
   text(random(['#name은(는) '+give_obj+'을(를) 얻었다!','#name은(는) '+give_obj+'을(를) 획득했다!','#name은(는) '+give_obj+'을(를) 가졌다!','#name은(는) '+give_obj+'을(를) 주웠다!','#name은(는) '+give_obj+'을(를) 가방에 넣었다!']))
@@ -126,6 +169,13 @@ var system = new Object;
 system.versionCheck = () => {
   console.log("version 20200809")
 }
+system.logClear = () => {
+  let coop_logClear1 = $('.text *')[0].childNodes[0].nodeValue;
+  $('.text')[0].innerHTML = null;
+  text(coop_logClear1);
+  console.log("complete");
+}
+system.updateSpeed = 1000/60
 
 var discard = function (a) {
   findslice(me.item, a)
@@ -149,20 +199,21 @@ var object = [
     id: "나",
     name: "미상",
     health: 4,
-    maxhealth: 4,
+    maxhealth: {total: 4, base: 4, },
     energy: 50,
-    maxenergy: 100,
-    attack: 100,
-    evade: 100,
-    crit: 3,
-    critPer: 0.05,
-    spell: 100,
-    lucky: 50,
-    hope: 0,
-    angel: 100,
-    evil: 100,
-    effort: 0,
-    observe: 50,
+    maxenergy: {total: 100, base: 100, },
+    attack: {total: 0, base: 100, },
+    evade: {total: 0, base: 100, },
+    crit: {total: 0, base: 3, },
+    critPer: {total: 0, base: 0.05, },
+    spell: {total: 0, base: 100, },
+    lucky: {total: 0, base: 50, },
+    hope: {total: 0, base: 0, },
+    angel: {total: 0, base: 100, },
+    evil: {total: 0, base: 100, },
+    effort: {total: 0, base: 0, },
+    observe: {total: 0, base: 50, },
+    buff: [],
 
     weapon: "몽당단검",
     pendant: "",
@@ -248,6 +299,27 @@ function select(a) {
     find(data.situation, inf.situation).event()
     turn()
   },100)
+
+  // 방전
+  if(me.energy <= 10 && me.buff.indexOf('방전') == -1) {
+    addbuff('방전')
+    text("#name은(는) 방전 상태가 됐다, 생명이 위태로워 보인다!")
+    if(me.item.includes('에너지 드링크')) {
+      text("#name은(는) 주머니에서 에너지 드링크를 들더니 벌컥벌컥 마신다. 아껴두길 잘했다.")
+      discard('에너지 드링크')
+      setStat('energy', 50)
+    } else if(me.item.includes('양고기')) {
+      text("#name은(는) 어떤 기억이 녹아있는 양고기를 들고 물어 뜯었다. 무언가 강해졌다.")
+      discard('양고기')
+      addbuff('포만감')
+      setStat('energy', 999)
+    }
+  } else {
+    deletebuff('방전')
+  }
+  if(me.energy <= 0) {
+    me.health -= 1
+  }
 }
 
 function turn() {
@@ -293,55 +365,72 @@ window.onload = function () {
   turn()
 
   tick = setInterval(() => {
-      // setting
+
+    // buff
+    for(let i in me.buff) {
+      find(data.buff, me.buff[i]).tick();
+    }
+
+    // setting
     $(".health").html(null);
-    for(let i = 0; i<me.maxhealth; i++) {
+    for(let i = 0; i<me.maxhealth.total; i++) {
       $(".health").append("<div></div>")
     }
     for(let i = 0; i<me.health; i++) {
       $(".health div:eq("+i+")").css("background-color", "#ed4956")
     }
 
-    if(me.energy > me.maxenergy) {
-      me.energy = me.maxenergy;
+    if(me.energy > me.maxenergy.total) {
+      me.energy = me.maxenergy.total;
     }
     if(me.health > me.maxhealth) {
-      me.health = me.maxhealth;
+      me.health = me.maxhealth.total;
     }
     if(me.critPer > 1) {
-      me.crit += Math.floor((me.critPer - 1)*500)/100
-      me.critPer = 1
+      me.crit.overCritPer += Math.floor((me.critPer.total - 1)*500)/100
+      me.critPer.overCritPer -= me.critPer.total - 1
     }
 
-    me.attack = Math.floor(me.attack*100)/100
-    me.health = Math.floor(me.health*100)/100
+    const ithasadd = ['attack', 'maxhealth', 'maxenergy', 'evade', 'crit', 'critPer', 'spell', 'angel', 'evil', 'lucky', 'effort', 'hope', 'observe']
+
+    for(let j in ithasadd) {
+      me[ithasadd[j]].total = 0;
+      // console.log(me[ithasadd[j]])
+      for(let i = 1; i<Object.keys(me[ithasadd[j]]).length; i++) {
+        me[ithasadd[j]].total += me[ithasadd[j]][Object.keys(me[ithasadd[j]])[i]]
+      }
+    }
+
+    me.attack.total = Math.floor(me.attack.total*100)/100
+    me.health.total = Math.floor(me.health.total*100)/100
     me.energy = Math.floor(me.energy*100)/100
-    me.maxhealth = Math.floor(me.maxhealth*100)/100
-    me.maxenergy = Math.floor(me.maxenergy*100)/100
-    me.evade = Math.floor(me.evade*100)/100
-    me.crit = Math.floor(me.crit*100)/100
-    me.critPer = Math.floor(me.critPer*10000)/10000
-    me.spell = Math.floor(me.spell*100)/100
-    me.angel = Math.floor(me.angel*100)/100
-    me.evil = Math.floor(me.evil*100)/100
-    me.lucky = Math.floor(me.lucky*100)/100
-    me.hope = Math.floor(me.hope*100)/100
-    me.observe = Math.floor(me.observe*100)/100
+    me.maxhealth.total = Math.floor(me.maxhealth.total*100)/100
+    me.maxenergy.total = Math.floor(me.maxenergy.total*100)/100
+    me.evade.total = Math.floor(me.evade.total*100)/100
+    me.crit.total = Math.floor(me.crit.total*100)/100
+    me.critPer.total = Math.floor(me.critPer.total*10000)/10000
+    me.spell.total = Math.floor(me.spell.total*100)/100
+    me.angel.total = Math.floor(me.angel.total*100)/100
+    me.evil.total = Math.floor(me.evil.total*100)/100
+    me.lucky.total = Math.floor(me.lucky.total*100)/100
+    me.effort.total = Math.floor(me.effort.total*100)/100
+    me.hope.total = Math.floor(me.hope.total*100)/100
+    me.observe.total = Math.floor(me.observe.total*100)/100
     
     $(".statWindow .value, .statWindow .stat")[0].innerHTML = me.name // 이름
-    $(".statWindow .value, .statWindow .stat")[1].innerHTML = me.attack // 근력
-    $(".statWindow .value, .statWindow .stat")[2].innerHTML = me.health + " / " + me.maxhealth // 체력
-    $(".statWindow .value, .statWindow .stat")[3].innerHTML = me.energy + " / " + me.maxenergy // 기력
-    $(".statWindow .value, .statWindow .stat")[4].innerHTML = me.crit+"배" // 치명력
-    $(".statWindow .value, .statWindow .stat")[5].innerHTML = (Math.floor(me.critPer*1000)/10) + "%" // 집중력
-    $(".statWindow .value, .statWindow .stat")[6].innerHTML = me.spell // 지력
-    $(".statWindow .value, .statWindow .stat")[7].innerHTML = me.evade // 회피력
-    $(".statWindow .value, .statWindow .stat")[8].innerHTML = me.effort // 노력
-    $(".statWindow .value, .statWindow .stat")[9].innerHTML = me.hope // 행복
-    $(".statWindow .value, .statWindow .stat")[10].innerHTML = me.angel // 선
-    $(".statWindow .value, .statWindow .stat")[11].innerHTML = me.evil // 악
-    $(".statWindow .value, .statWindow .stat")[12].innerHTML = me.lucky // 행운
-    $(".statWindow .value, .statWindow .stat")[13].innerHTML = me.observe // 관찰력
+    $(".statWindow .value, .statWindow .stat")[1].innerHTML = me.attack.total // 근력
+    $(".statWindow .value, .statWindow .stat")[2].innerHTML = me.health + " / " + me.maxhealth.total // 체력
+    $(".statWindow .value, .statWindow .stat")[3].innerHTML = me.energy + " / " + me.maxenergy.total // 기력
+    $(".statWindow .value, .statWindow .stat")[4].innerHTML = me.crit.total+"배" // 치명력
+    $(".statWindow .value, .statWindow .stat")[5].innerHTML = (Math.floor(me.critPer.total*1000)/10) + "%" // 집중력
+    $(".statWindow .value, .statWindow .stat")[6].innerHTML = me.spell.total // 지력
+    $(".statWindow .value, .statWindow .stat")[7].innerHTML = me.evade.total // 회피력
+    $(".statWindow .value, .statWindow .stat")[8].innerHTML = me.effort.total // 노력
+    $(".statWindow .value, .statWindow .stat")[9].innerHTML = me.hope.total // 행복
+    $(".statWindow .value, .statWindow .stat")[10].innerHTML = me.angel.total // 선
+    $(".statWindow .value, .statWindow .stat")[11].innerHTML = me.evil.total // 악
+    $(".statWindow .value, .statWindow .stat")[12].innerHTML = me.lucky.total // 행운
+    $(".statWindow .value, .statWindow .stat")[13].innerHTML = me.observe.total // 관찰력
 
     $(".statWindow .item")[0].innerHTML = me.item.join("  /  ")
 
@@ -350,7 +439,7 @@ window.onload = function () {
       data.screenEffect.invertShake();
       $(".dead-screen").css("visibility",'visible')
     }
-  },1000/60)
+  },system.updateSpeed)
 
   $("#showButton").on('click', () => {
     if(shortinf.screen == "aboutme") {

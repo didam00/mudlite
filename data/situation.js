@@ -8,7 +8,7 @@ data.situFunction = {
   },
   find_who() {
     setStat('energy', -4)
-    inf.situation = 'find_who'+Math.floor(Math.random()*3)
+    inf.situation = 'find_who'+Math.floor(Math.random()*5)
   },
 }
 
@@ -355,6 +355,49 @@ data.situation = [
     }
   },
   {
+    id: "find_who3",
+    text: ["저기 있는 회색 석상은 가고일 석상이다... 실험체가 강해졌을 때를 대비해서 만든 것 중 하나이다. 물론 약할 때는 단순한 돌덩이일 뿐이다."],
+    answer: [
+      
+    ],
+    event: () => {
+
+    },
+    effect: {
+      부수자: () => {
+        enemy = deepCopy(find(data.entity, "가고일 석상"))
+        if(me.attack.total >= 1000) {
+          text('...석상이 움직인다.')
+          enemy.health += 9999
+        }
+        inf.situation = 'fight'
+      },
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
+    id: "find_who4",
+    text: ["또 어떤 과학자가 저런 짓을 벌인지를 모르겠다ㅡ 인간에게 새의 날개를 달아놓는 그런..."],
+    answer: [
+      
+    ],
+    event: () => {
+
+    },
+    effect: {
+      덤벼라: () => {
+        enemy = deepCopy(find(data.entity, "날개달린 인간"))
+        inf.situation = 'fight'
+      },
+      도망치자: 'escape',
+    },
+    publicEffect: () => {
+      
+    }
+  },
+  {
     id: "fight", // 싸움
     text: [],
     answer: [
@@ -430,7 +473,7 @@ data.situation = [
       "야호"
     ],
     event: () => {
-
+      enemy.die()
     },
     effect: {
       야호: '#random',

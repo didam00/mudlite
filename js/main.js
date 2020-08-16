@@ -59,6 +59,9 @@ function deletebuff(a) {
     return false;
   }
 }
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 function setStat(a, value, type='base') {
   if(a == 'health' || a == 'energy') {
     if(getType(value) == 'string') {
@@ -90,6 +93,16 @@ function setStat(a, value, type='base') {
       }
     }
     me[a][type] += Number(value)
+  }
+
+  if(a == 'health') {
+    $(".health").html(null);
+    for(let i = 0; i<me.maxhealth.total; i++) {
+      $(".health").append("<div></div>")
+    }
+    for(let i = 0; i<me.health; i++) {
+      $(".health div:eq("+i+")").css("background-color", "#ed4956")
+    }
   }
 }
 var get = function (give_obj) {
@@ -162,6 +175,37 @@ function swipe(obj, ev) {
       }
     }
   })
+
+  // click
+  obj.on('mousedown', event => {
+    startx = event.screenX
+    starty = event.screenY
+  })
+  obj.on('mouseup', event => {
+    endx = event.screenX
+    endy = event.screenY
+    if(Math.abs(startx - endx) < 50) { // vertical
+      if((starty - endy) > 80) { // up
+        // console.log("u")
+        if(shortinf.screen == "aboutme") {
+          play.hideStat()
+        }
+      }
+      if((endy - starty) > 80) { // down
+        if(shortinf.screen == "maingame") {
+          play.showStat()
+        }
+      }
+    }
+    if(Math.abs(starty - endy) < 50) { // horizontal
+      if((startx - endx) > 80) { // left
+        // console.log("l")
+      }
+      if((endx - startx) > 80) { // right
+        // console.log("r")
+      }
+    }
+  })
 }
 
 var system = new Object;
@@ -200,8 +244,8 @@ var object = [
     name: "미상",
     health: 4,
     maxhealth: {total: 4, base: 4, },
-    energy: 50,
-    maxenergy: {total: 100, base: 100, },
+    energy: 80,
+    maxenergy: {total: 120, base: 120, },
     attack: {total: 0, base: 100, },
     evade: {total: 0, base: 100, },
     crit: {total: 0, base: 3, },
@@ -218,7 +262,7 @@ var object = [
     weapon: "몽당단검",
     pendant: "",
     item: new Array,
-    maxItem: 18,
+    maxItem: 72,
   }
 ]
 
@@ -339,10 +383,15 @@ function turn() {
   for(let i = 0; i < answerText.text.length; i++) {
     text(answerText.text[i])
   }
+  
+  // buff
+  for(let i in me.buff) {
+    find(data.buff, me.buff[i]).tick();
+  }
 }
 
 window.onload = function () {
-  $("html").click(() => {
+  let touchfunction = () => {
     if(shortinf.screen == "thumbnail") {
       $("#thumbnail").animate({
         opacity: "0",
@@ -360,18 +409,7 @@ window.onload = function () {
         shortinf.screen = "maingame"
       }, 200);
     }
-  })
 
-  turn()
-
-  tick = setInterval(() => {
-
-    // buff
-    for(let i in me.buff) {
-      find(data.buff, me.buff[i]).tick();
-    }
-
-    // setting
     $(".health").html(null);
     for(let i = 0; i<me.maxhealth.total; i++) {
       $(".health").append("<div></div>")
@@ -379,11 +417,26 @@ window.onload = function () {
     for(let i = 0; i<me.health; i++) {
       $(".health div:eq("+i+")").css("background-color", "#ed4956")
     }
+  }
+
+  if(isMobile()) {
+    touchfunction()
+  }
+  
+  $("html").click(() => {
+    touchfunction()
+  })
+
+  turn()
+
+  tick = setInterval(() => {
+
+    // setting
 
     if(me.energy > me.maxenergy.total) {
       me.energy = me.maxenergy.total;
     }
-    if(me.health > me.maxhealth) {
+    if(me.health > me.maxhealth.total) {
       me.health = me.maxhealth.total;
     }
     if(me.critPer > 1) {

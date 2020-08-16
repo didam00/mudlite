@@ -4,6 +4,9 @@ data.entity = [
     health: 200,
     item: ['약', '밴드'],
     def: 0,
+    die: () => {
+
+    },
     customai: () => {
       
     },
@@ -53,6 +56,9 @@ data.entity = [
     health: 800,
     item: ['창','약','약'],
     def: 0,
+    die: () => {
+
+    },
     pattern: [
       {
         id: "찌르기",
@@ -101,6 +107,9 @@ data.entity = [
     health: 450,
     item: ['에너지 드링크'],
     def: 0,
+    die: () => {
+
+    },
     pattern: [
       {
         id: "꿈틀",
@@ -128,21 +137,106 @@ data.entity = [
     ],
   },
   {
+    id: "가고일 석상",
+    health: 1,
+    item: ['파괴된 돌조각'],
+    def: 0,
+    die: () => {
+      get('신비의 돌조각')
+      text()
+    },
+    pattern: [
+      {
+        id: "모두 부수기",
+        text: "주변의 모든 것들을 가고일에게로 끌어당긴다.",
+        success: "모든 것을 부쉈다.",
+        fail: "#name은(는) 빠르게 움직여 공격을 피했다.",
+        evade: -1000,
+        event() {
+          setStat("health", -9999);
+          data.screenEffect.invertShake();
+        },
+      },
+    ],
+  },
+  {
     id: "날개달린 인간",
     health: 1200,
     item: ['깃'],
-    def: 0.1,
+    def: 0,
+    feather: 0,
+    die: () => {
+      text("비명을 지르더니 그대로 깃털을 사방으로 날리며 쓰러진다.")
+      if(me.evade.total <= 120) {
+        setStat('health' -1)
+      }
+    },
     pattern: [
       {
         id: "깃털궤도",
-        text: "깃털을 자신 주변으로 날리더니 보호막같은 걸 형성시킨다.",
-        success: "팔은 빠르게 다가가더니 때리진 않고 에너지만 흡수하고 빠르게 빠진다.",
-        fail: "팔을 가볍게 쳐내고 #name은(는) 다시 싸움에 집중한다.",
-        evade: -130,
+        text: "깃털을 자신 주변으로 크게 날린다.",
+        success: "깃털을 날리더니 보호막같은 걸 형성시킨다. 날개달린 인간은 깃털을 하나 모았다. (현재 "+(enemy.feather)+"개)",
+        fail: "#name은(는) 깃털들을 빠르게 무기로 제거한다.",
+        evade: -200,
         event() {
-          setStat("energy", -15);
-          enemy.health += 15
-          data.screenEffect.blur();
+          enemy.health += 150
+          if(me.evade.total <= 100) {
+            text('#name의 부주의함으로 깃털들에 스쳐 피해를 받았다.')
+            setStat('health', -1)
+            data.screenEffect.blur()
+          }
+          enemy.feather += 1
+        },
+      },
+      {
+        id: "깃털쏟기",
+        text: "주변에 있는 깃을 모두 모으더니 #name을(를) 향해 쏘려고 한다.",
+        success: "깃털들이 #name을(를) 향해 빠르게 다가간다!",
+        fail: "하지만 날리기 전 빠르게 무기로 제거했다.",
+        evade: -800,
+        event() {
+          if(me.evade.total <= (100 + enemy.feather*25)) {
+            text('깃털들이 모두 그에게로 다가가 그는 큰 피해를 입은 듯 싶다.')
+            setStat('health', -enemy.feather)
+            enemy.feather = 0;
+            data.screenEffect.invertShake();
+          } else {
+            text('아 물론 그냥 간단하게 피했다..')
+          }
+        },
+      },
+      {
+        id: "깃털보호",
+        text: "주변에 있는 깃을 모두 모으더니 자신을 보호하려한다",
+        success: "깃털들이 빠르게 단단한 보호막을 형성한다. 보호막 또한 증가한것같다.",
+        fail: "하지만 형성되기 전 빠르게 무기로 제거했다.",
+        evade: -800,
+        event() {
+          enemy.health += enemy.feather * 70;
+          enemy.def += (1 - enemy.def)*(0.07 * enemy.feather)
+          enemy.feather = 0;
+        },
+      },
+      {
+        id: "깃털정비",
+        text: "자신의 날개에서 깃을 뽑아 깃을 얻었다.",
+        success: "(현재 "+(enemy.feather)+"개)",
+        fail: "-",
+        evade: -9999,
+        event() {
+          enemy.feather += 2;
+        },
+      },
+      {
+        id: "젭싼 깃",
+        text: "자신의 날개에서 깃을 뽑아 깃을 던진다.",
+        success: "정확히 명중했다. 날개달린 인간은 깃털을 하나 얻었다.(현재 "+(enemy.feather)+"개)",
+        fail: "#name은(는) 생각보다 빨랐기에 가볍게 피할 수 있었다.",
+        evade: -120,
+        event() {
+          enemy.feather += 1
+          data.screenEffect.invertShake();
+          setStat('health', -1)
         },
       },
     ],

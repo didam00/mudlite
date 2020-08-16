@@ -6,18 +6,18 @@
 html {
   /* background-image: url(../res/background.png);
   background-size: 100%; */
-  background: #fafafa;
+  background: #f0f6f0;
 }
 
 .dead-screen {
-  width: 100%; height: 100%; position: fixed; background: #262626; left: 0; top: 0; z-index: 99999; visibility: hidden;
+  width: 100%; height: 100%; position: fixed; background: #222323; left: 0; top: 0; z-index: 99999; visibility: hidden;
 }
 
 .dead-screen div {
   position: fixed;
   transform: translate(-50%, -50%);
   left: 50%; top: 50%;
-  color: #fafafa;
+  color: #f0f6f0;
 }
 
 * {
@@ -29,7 +29,7 @@ html {
   overflow: hidden;
   transition: all 250ms;
   font-family: 'RIDIBatang', serif;
-  color: #262626;
+  color: #222323;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -73,7 +73,7 @@ html {
 .gradient-text {
   position: fixed;
   bottom: 0; left: 0; width: 100%; height: 50%;
-  background: linear-gradient(#fafafa00, #fafafa);
+  background: linear-gradient(#f0f6f000, #f0f6f0);
 }
 
 .health {
@@ -123,18 +123,18 @@ html {
 }
 
 .button-list {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 10px;
   transition: none;
 }
 
 .button {
-  border: 2px solid #262626;
+  border: 2px solid #222323;
   border-radius: 19px;
   padding: 8px 10px;
-  background: #fafafa;
-  color: #262626; 
+  background: #f0f6f0;
+  color: #222323; 
   font-size: 14px;
   text-align: right;
   margin-top: 4px;
@@ -146,8 +146,8 @@ html {
 }
 
 .button:hover {
-  background: #262626; 
-  color: #fafafa;
+  background: #222323; 
+  color: #f0f6f0;
   padding: 8px 14px;
 }
 
@@ -164,7 +164,7 @@ html {
 .statWindow td {
   width: 25%;
   padding: 5px 10px 5px 10px;
-  color: #262626;
+  color: #222323;
 }
 
 .statWindow .subj {
@@ -189,9 +189,9 @@ html {
   top: 10px;
   right: 10px;
   border-radius: 14px;
-  border: 2px #262626 solid;
+  border: 2px #222323 solid;
   overflow: visible;
-  color: #262626;
+  color: #222323;
   text-align: center;
   font-size: 12px;
   cursor: pointer;
@@ -201,6 +201,24 @@ html {
   #showButton {
     visibility: hidden;
   }
+
+  .button-list {
+    width: calc(100% - 20px);
+  }
+
+  .button {
+    width: calc(100% - 24px);
+    text-align: center;
+    margin-left: 0px;
+    margin-top: 6px;
+    border: 1.5px solid #222323;
+  }
+
+  .button:hover {
+    background: #222323; 
+    color: #f0f6f0;
+    padding: 8px 10px;
+  }
 }
 
-/* #262626, #ed4956 #fafafa*/
+/* #222323, #ed4956 #f0f6f0*/
